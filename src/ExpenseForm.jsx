@@ -1,10 +1,19 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
-function ExpenseForm({ addExpense }) {
+function ExpenseForm({ addExpense, editingExpense, updateExpense }) {
   const [amount, setAmount] = useState("");
   const [category, setCategory] = useState("Food");
   const [note, setNote] = useState("");
   const [date, setDate] = useState("");
+
+  useEffect(() => {
+    if (editingExpense) {
+      setAmount(editingExpense.amount);
+      setCategory(editingExpense.category);
+      setNote(editingExpense.note);
+      setDate(editingExpense.date);
+    }
+  }, [editingExpense]);
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -15,17 +24,15 @@ function ExpenseForm({ addExpense }) {
     }
 
     const expense = {
-      id: Date.now(),
+      id: editingExpense ? editingExpense.id : Date.now(),
       amount,
       category,
       note,
       date,
     };
 
-    // Send data to App.jsx
-    addExpense(expense);
+    editingExpense ? updateExpense(expense) : addExpense(expense);
 
-    // Clear form
     setAmount("");
     setCategory("Food");
     setNote("");
@@ -33,7 +40,7 @@ function ExpenseForm({ addExpense }) {
   };
 
   return (
-    <form onSubmit={handleSubmit}>
+    <form className="expense-form" onSubmit={handleSubmit}>
       <input
         type="number"
         placeholder="Amount"
@@ -65,7 +72,9 @@ function ExpenseForm({ addExpense }) {
         onChange={(e) => setDate(e.target.value)}
       />
 
-      <button type="submit">Add Expense</button>
+      <button type="submit">
+        {editingExpense ? "Update Expense" : "Add Expense"}
+      </button>
     </form>
   );
 }

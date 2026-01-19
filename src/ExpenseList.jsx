@@ -1,12 +1,12 @@
 import ExpenseItem from "./ExpenseItem";
 
-function ExpenseList({ expenses, deleteExpense }) {
+function ExpenseList({ expenses, deleteExpense, onEdit }) {
   if (expenses.length === 0) {
-    return <p>No expenses added yet.</p>;
+    return <p>No expenses found.</p>;
   }
 
   return (
-    <table border="1" cellPadding="8">
+    <table>
       <thead>
         <tr>
           <th>Date</th>
@@ -23,6 +23,7 @@ function ExpenseList({ expenses, deleteExpense }) {
             key={expense.id}
             expense={expense}
             onDelete={deleteExpense}
+            onEdit={onEdit}
           />
         ))}
       </tbody>

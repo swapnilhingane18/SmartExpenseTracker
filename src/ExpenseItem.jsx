@@ -1,4 +1,4 @@
-function ExpenseItem({ expense, onDelete }) {
+function ExpenseItem({ expense, onDelete, onEdit }) {
   return (
     <tr>
       <td>{expense.date}</td>
@@ -6,6 +6,7 @@ function ExpenseItem({ expense, onDelete }) {
       <td>{expense.note || "-"}</td>
       <td>₹ {expense.amount}</td>
       <td>
+        <button onClick={() => onEdit(expense)}>Edit</button>{" "}
         <button onClick={() => onDelete(expense.id)}>Delete</button>
       </td>
     </tr>
