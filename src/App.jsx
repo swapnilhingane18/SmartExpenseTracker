@@ -1,21 +1,28 @@
 import { useState } from "react";
 import ExpenseForm from "./ExpenseForm";
+import ExpenseList from "./ExpenseList";
 
 function App() {
   const [expenses, setExpenses] = useState([]);
 
   const addExpense = (expense) => {
-    setExpenses((prevExpenses) => [...prevExpenses, expense]);
+    setExpenses((prev) => [...prev, expense]);
+  };
+
+  const deleteExpense = (id) => {
+    setExpenses((prev) => prev.filter((exp) => exp.id !== id));
   };
 
   return (
     <div>
       <h1>Expense Tracker</h1>
 
-      {/* Pass function as prop */}
       <ExpenseForm addExpense={addExpense} />
 
-      <h2>Expenses Count: {expenses.length}</h2>
+      <ExpenseList
+        expenses={expenses}
+        deleteExpense={deleteExpense}
+      />
     </div>
   );
 }
