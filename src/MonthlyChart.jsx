@@ -1,26 +1,24 @@
-function MonthlyChart({ data }) {
-  const maxAmount = Math.max(...Object.values(data), 1);
+function MonthlyChart({ summary }) {
+  const maxAmount = Math.max(...Object.values(summary), 1);
 
   return (
-    <div>
+    <div className="chart-container">
       <h3>Monthly Expense Chart</h3>
 
-      <div className="chart">
-        {Object.entries(data).map(([month, amount]) => (
-          <div key={month} className="chart-row">
-            <span>{month}</span>
+      {Object.entries(summary).map(([month, amount]) => (
+        <div key={month} className="chart-row">
+          <span className="chart-label">{month}</span>
 
-            <div
-              className="bar"
-              style={{
-                width: `${(amount / maxAmount) * 100}%`,
-              }}
-            >
-              ₹ {amount}
-            </div>
+          <div
+            className="chart-bar"
+            style={{
+              width: `${(amount / maxAmount) * 100}%`,
+            }}
+          >
+            ₹ {amount}
           </div>
-        ))}
-      </div>
+        </div>
+      ))}
     </div>
   );
 }

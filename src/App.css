@@ -144,3 +144,58 @@ table button:first-child:hover {
 .export-btn:hover {
   background-color: #0284c7;
 }
+
+.chart-container {
+  margin: 25px 0;
+}
+
+.chart-row {
+  display: flex;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.chart-label {
+  width: 90px;
+  font-size: 14px;
+}
+
+.chart-bar {
+  background-color: #4f46e5;
+  color: white;
+  padding: 6px 10px;
+  border-radius: 4px;
+  font-size: 13px;
+  transition: width 0.3s ease;
+}
+.pie-container {
+  margin-top: 30px;
+}
+
+.pie-chart {
+  width: 220px;
+  height: 220px;
+  border-radius: 50%;
+  margin: 20px auto;
+}
+
+.pie-legend {
+  list-style: none;
+  padding: 0;
+  max-width: 300px;
+  margin: 0 auto;
+}
+
+.pie-legend li {
+  display: flex;
+  align-items: center;
+  margin-bottom: 6px;
+  font-size: 14px;
+}
+
+.legend-color {
+  width: 12px;
+  height: 12px;
+  margin-right: 8px;
+  border-radius: 50%;
+}

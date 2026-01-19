@@ -1,6 +1,8 @@
 import { useEffect, useState } from "react";
 import ExpenseForm from "./ExpenseForm";
 import ExpenseList from "./ExpenseList";
+import MonthlyChart from "./MonthlyChart";
+import CategoryPieChart from "./CategoryPieChart";
 import "./App.css";
 
 function App() {
@@ -32,11 +34,15 @@ function App() {
     setExpenses((prev) => prev.filter((e) => e.id !== id));
   };
 
-  /* ---------------- FILTER ---------------- */
+  /* ---------------- FILTER & SORT ---------------- */
   const filteredExpenses =
     filterCategory === "All"
       ? expenses
       : expenses.filter((e) => e.category === filterCategory);
+
+  const sortedExpenses = [...filteredExpenses].sort(
+    (a, b) => new Date(b.date) - new Date(a.date)
+  );
 
   /* ---------------- TOTAL ---------------- */
   const totalExpense = filteredExpenses.reduce(
@@ -48,6 +54,12 @@ function App() {
   const monthlySummary = expenses.reduce((acc, e) => {
     const month = e.date.slice(0, 7); // YYYY-MM
     acc[month] = (acc[month] || 0) + Number(e.amount);
+    return acc;
+  }, {});
+
+  /* ---------------- CATEGORY SUMMARY (FOR PIE CHART) ---------------- */
+  const categorySummary = expenses.reduce((acc, e) => {
+    acc[e.category] = (acc[e.category] || 0) + Number(e.amount);
     return acc;
   }, {});
 
@@ -76,6 +88,7 @@ function App() {
     link.click();
   };
 
+  /* ---------------- UI ---------------- */
   return (
     <div className="app-container">
       <h1>Expense Tracker</h1>
@@ -104,18 +117,20 @@ function App() {
 
       <h2 className="total">Total Expense: ₹ {totalExpense}</h2>
 
-      {/* CSV EXPORT BUTTON */}
       <button onClick={exportToCSV} className="export-btn">
         Export to CSV
       </button>
 
       <ExpenseList
-        expenses={filteredExpenses}
+        expenses={sortedExpenses}
         deleteExpense={deleteExpense}
         onEdit={setEditingExpense}
       />
 
-      {/* MONTHLY SUMMARY */}
+      {/* MONTHLY BAR CHART */}
+      <MonthlyChart summary={monthlySummary} />
+
+      {/* MONTHLY SUMMARY LIST */}
       <h2>Monthly Summary</h2>
       <ul className="monthly-summary">
         {Object.entries(monthlySummary).map(([month, amount]) => (
@@ -124,6 +139,9 @@ function App() {
           </li>
         ))}
       </ul>
+
+      {/* CATEGORY PIE CHART */}
+      <CategoryPieChart data={categorySummary} />
     </div>
   );
 }
