@@ -1,16 +1,121 @@
-# React + Vite
+Expense Tracker (React)
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A clean and responsive Expense Tracker web application built using React.
+It helps users track daily expenses, filter data, visualize spending patterns, and export reports — all with localStorage persistence and no backend required.
 
-Currently, two official plugins are available:
+🚀 Live Demo
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+🔗 Live App:https://expensetrackerswapnilh.netlify.app/
 
-## React Compiler
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+✨ Features
+Core Functionality
 
-## Expanding the ESLint configuration
+Add expenses with amount, category, note, and date
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+Edit existing expenses
+
+Delete expenses
+
+Automatically calculate total expenses
+
+Advanced Features
+
+Category filter (Food, Travel, Shopping, Bills, Other)
+
+Date range filter
+
+Sorting (latest expenses first)
+
+Monthly expense bar chart
+
+Category-wise pie chart (360° circular view)
+
+CSV export of all expenses
+
+Dark mode toggle
+
+Persistent data using localStorage
+
+📊 Visual Insights
+
+Monthly expense summary using bar charts
+
+Category-wise spending distribution using a circular (pie) chart
+
+Real-time updates on data changes
+
+🛠 Tech Stack
+
+Frontend: React (Functional Components)
+
+State Management: useState, useEffect
+
+Styling: CSS (custom variables + dark mode)
+
+Charts: Custom chart components (no backend)
+
+Storage: Browser localStorage
+
+Build Tool: Vite
+
+Deployment: Netlify
+
+📂 Project Structure
+src/
+│── App.jsx
+│── ExpenseForm.jsx
+│── ExpenseList.jsx
+│── MonthlyChart.jsx
+│── CategoryPieChart.jsx
+│── App.css
+│── main.jsx
+
+⚙️ How to Run Locally
+# Clone repository
+git clone https://github.com/your-username/your-repo-name.git
+
+# Go to project folder
+cd expense-tracker
+
+# Install dependencies
+npm install
+
+# Start development server
+npm run dev
+
+🧠 What This Project Demonstrates
+
+Strong understanding of React fundamentals
+
+Proper component-based architecture
+
+Clean state management and data flow
+
+Real-world UI/UX thinking
+
+Data persistence without backend
+
+Deployment and production readiness
+
+📈 Future Enhancements (Optional)
+
+Authentication (login/signup)
+
+Backend integration (Node.js + MongoDB)
+
+Cloud database
+
+Analytics dashboard
+
+Budget limit alerts
+
+👤 Author
+
+Swapnil Hingane
+Frontend Developer (React)
+📍 India
+
+GitHub: https://github.com/swapnilhingane18
+
+LinkedIn: (https://www.linkedin.com/in/swapnil-hingane-943867294?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=android_app)
