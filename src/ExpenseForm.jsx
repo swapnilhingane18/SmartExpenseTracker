@@ -1,16 +1,21 @@
 import { useEffect, useState } from "react";
 
-function ExpenseForm({ addExpense, editingExpense, updateExpense }) {
+export default function ExpenseForm({
+  addExpense,
+  editingExpense,
+  updateExpense,
+}) {
   const [amount, setAmount] = useState("");
   const [category, setCategory] = useState("Food");
   const [note, setNote] = useState("");
   const [date, setDate] = useState("");
 
+  /* Prefill form when editing */
   useEffect(() => {
     if (editingExpense) {
       setAmount(editingExpense.amount);
       setCategory(editingExpense.category);
-      setNote(editingExpense.note);
+      setNote(editingExpense.note || "");
       setDate(editingExpense.date);
     }
   }, [editingExpense]);
@@ -18,14 +23,11 @@ function ExpenseForm({ addExpense, editingExpense, updateExpense }) {
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    if (!amount || !date) {
-      alert("Amount and Date are required");
-      return;
-    }
+    if (!amount || !date) return;
 
     const expense = {
       id: editingExpense ? editingExpense.id : Date.now(),
-      amount,
+      amount: Number(amount),
       category,
       note,
       date,
@@ -33,6 +35,7 @@ function ExpenseForm({ addExpense, editingExpense, updateExpense }) {
 
     editingExpense ? updateExpense(expense) : addExpense(expense);
 
+    /* Reset form */
     setAmount("");
     setCategory("Food");
     setNote("");
@@ -45,13 +48,12 @@ function ExpenseForm({ addExpense, editingExpense, updateExpense }) {
         type="number"
         placeholder="Amount"
         value={amount}
+        required
+        min="1"
         onChange={(e) => setAmount(e.target.value)}
       />
 
-      <select
-        value={category}
-        onChange={(e) => setCategory(e.target.value)}
-      >
+      <select value={category} onChange={(e) => setCategory(e.target.value)}>
         <option>Food</option>
         <option>Travel</option>
         <option>Shopping</option>
@@ -69,14 +71,16 @@ function ExpenseForm({ addExpense, editingExpense, updateExpense }) {
       <input
         type="date"
         value={date}
+        required
         onChange={(e) => setDate(e.target.value)}
       />
 
-      <button type="submit">
+      <button
+        type="submit"
+        className={editingExpense ? "edit-btn" : "add-btn"}
+      >
         {editingExpense ? "Update Expense" : "Add Expense"}
       </button>
     </form>
   );
 }
-
-export default ExpenseForm;

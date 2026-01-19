@@ -13,19 +13,22 @@ function App() {
 
   const [editingExpense, setEditingExpense] = useState(null);
   const [filterCategory, setFilterCategory] = useState("All");
+  const [startDate, setStartDate] = useState("");
+  const [endDate, setEndDate] = useState("");
+  const [darkMode, setDarkMode] = useState(false);
 
   useEffect(() => {
     localStorage.setItem("expenses", JSON.stringify(expenses));
   }, [expenses]);
 
-  /* ---------------- CRUD ---------------- */
+  /* CRUD */
   const addExpense = (expense) => {
     setExpenses((prev) => [...prev, expense]);
   };
 
-  const updateExpense = (updatedExpense) => {
+  const updateExpense = (updated) => {
     setExpenses((prev) =>
-      prev.map((e) => (e.id === updatedExpense.id ? updatedExpense : e))
+      prev.map((e) => (e.id === updated.id ? updated : e))
     );
     setEditingExpense(null);
   };
@@ -34,63 +37,62 @@ function App() {
     setExpenses((prev) => prev.filter((e) => e.id !== id));
   };
 
-  /* ---------------- FILTER & SORT ---------------- */
-  const filteredExpenses =
-    filterCategory === "All"
-      ? expenses
-      : expenses.filter((e) => e.category === filterCategory);
+  /* FILTER + SORT */
+  const filteredExpenses = expenses.filter((e) => {
+    const catOk = filterCategory === "All" || e.category === filterCategory;
+    const startOk = !startDate || new Date(e.date) >= new Date(startDate);
+    const endOk = !endDate || new Date(e.date) <= new Date(endDate);
+    return catOk && startOk && endOk;
+  });
 
   const sortedExpenses = [...filteredExpenses].sort(
     (a, b) => new Date(b.date) - new Date(a.date)
   );
 
-  /* ---------------- TOTAL ---------------- */
-  const totalExpense = filteredExpenses.reduce(
+  /* TOTAL */
+  const totalExpense = sortedExpenses.reduce(
     (sum, e) => sum + Number(e.amount),
     0
   );
 
-  /* ---------------- MONTHLY SUMMARY ---------------- */
+  /* MONTHLY SUMMARY */
   const monthlySummary = expenses.reduce((acc, e) => {
-    const month = e.date.slice(0, 7); // YYYY-MM
+    const month = e.date.slice(0, 7);
     acc[month] = (acc[month] || 0) + Number(e.amount);
     return acc;
   }, {});
 
-  /* ---------------- CATEGORY SUMMARY (FOR PIE CHART) ---------------- */
+  /* CATEGORY SUMMARY */
   const categorySummary = expenses.reduce((acc, e) => {
     acc[e.category] = (acc[e.category] || 0) + Number(e.amount);
     return acc;
   }, {});
 
-  /* ---------------- CSV EXPORT ---------------- */
+  /* CSV */
   const exportToCSV = () => {
-    if (expenses.length === 0) {
-      alert("No expenses to export");
-      return;
-    }
+    if (!expenses.length) return alert("No expenses to export");
 
-    const headers = ["Date", "Category", "Note", "Amount"];
-    const rows = expenses.map((e) => [
-      e.date,
-      e.category,
-      e.note,
-      e.amount,
-    ]);
+    const rows = [
+      ["Date", "Category", "Note", "Amount"],
+      ...expenses.map((e) => [e.date, e.category, e.note, e.amount]),
+    ];
 
-    const csvContent =
+    const csv =
       "data:text/csv;charset=utf-8," +
-      [headers, ...rows].map((row) => row.join(",")).join("\n");
+      rows.map((r) => r.join(",")).join("\n");
 
     const link = document.createElement("a");
-    link.href = encodeURI(csvContent);
+    link.href = encodeURI(csv);
     link.download = "expenses.csv";
     link.click();
   };
 
-  /* ---------------- UI ---------------- */
   return (
-    <div className="app-container">
+    <div className={`app-container ${darkMode ? "dark" : ""}`}>
+      <button className="dark-toggle" onClick={() => setDarkMode(!darkMode)}>
+        {darkMode ? "☀ Light Mode" : "🌙 Dark Mode"}
+      </button>
+
       <h1>Expense Tracker</h1>
 
       <ExpenseForm
@@ -99,9 +101,7 @@ function App() {
         updateExpense={updateExpense}
       />
 
-      {/* CATEGORY FILTER */}
-      <div className="filter">
-        <label>Filter by Category:</label>
+      <div className="filters">
         <select
           value={filterCategory}
           onChange={(e) => setFilterCategory(e.target.value)}
@@ -113,11 +113,14 @@ function App() {
           <option>Bills</option>
           <option>Other</option>
         </select>
+
+        <input type="date" value={startDate} onChange={(e) => setStartDate(e.target.value)} />
+        <input type="date" value={endDate} onChange={(e) => setEndDate(e.target.value)} />
       </div>
 
       <h2 className="total">Total Expense: ₹ {totalExpense}</h2>
 
-      <button onClick={exportToCSV} className="export-btn">
+      <button className="export-btn" onClick={exportToCSV}>
         Export to CSV
       </button>
 
@@ -127,20 +130,7 @@ function App() {
         onEdit={setEditingExpense}
       />
 
-      {/* MONTHLY BAR CHART */}
       <MonthlyChart summary={monthlySummary} />
-
-      {/* MONTHLY SUMMARY LIST */}
-      <h2>Monthly Summary</h2>
-      <ul className="monthly-summary">
-        {Object.entries(monthlySummary).map(([month, amount]) => (
-          <li key={month}>
-            {month} : ₹ {amount}
-          </li>
-        ))}
-      </ul>
-
-      {/* CATEGORY PIE CHART */}
       <CategoryPieChart data={categorySummary} />
     </div>
   );
