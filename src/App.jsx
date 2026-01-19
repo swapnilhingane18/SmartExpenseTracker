@@ -1,21 +1,29 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import ExpenseForm from "./ExpenseForm";
 import ExpenseList from "./ExpenseList";
 
 function App() {
-  const [expenses, setExpenses] = useState([]);
+  // ✅ INITIALIZE STATE FROM localStorage
+  const [expenses, setExpenses] = useState(() => {
+    const stored = localStorage.getItem("expenses");
+    return stored ? JSON.parse(stored) : [];
+  });
+
+  // ✅ SAVE whenever expenses change
+  useEffect(() => {
+    localStorage.setItem("expenses", JSON.stringify(expenses));
+  }, [expenses]);
 
   const addExpense = (expense) => {
     setExpenses((prev) => [...prev, expense]);
   };
 
   const deleteExpense = (id) => {
-    setExpenses((prev) => prev.filter((exp) => exp.id !== id));
+    setExpenses((prev) => prev.filter((e) => e.id !== id));
   };
 
-  // ✅ TOTAL CALCULATION (derived state)
   const totalExpense = expenses.reduce(
-    (sum, exp) => sum + Number(exp.amount),
+    (sum, e) => sum + Number(e.amount),
     0
   );
 
@@ -27,10 +35,7 @@ function App() {
 
       <h2>Total Expense: ₹ {totalExpense}</h2>
 
-      <ExpenseList
-        expenses={expenses}
-        deleteExpense={deleteExpense}
-      />
+      <ExpenseList expenses={expenses} deleteExpense={deleteExpense} />
     </div>
   );
 }
